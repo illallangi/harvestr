@@ -1,6 +1,6 @@
 from pathlib import Path
 import click, os, json
-from more_itertools import only, one
+from more_itertools import one
 
 class Harvestr:
     def __init__(self, target, recycle, source, dry_run = False, verbose = False):
