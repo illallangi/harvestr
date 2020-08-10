@@ -56,11 +56,13 @@ class Harvestr:
     def move(self, src_path, dest_path):
         click.echo(f'Moving {src_path} to {dest_path}')
         if not self.dry_run:
+            os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.rename(src_path, dest_path)
 
     def link(self, src_path, dest_path):
         click.echo(f'Linking {src_path} to {dest_path}')
         if not self.dry_run:
+            os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.link(src_path, dest_path)
 
     def get_source(self):
