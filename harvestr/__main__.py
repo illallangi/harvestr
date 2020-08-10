@@ -4,6 +4,7 @@ import click
 from os import makedirs
 from .harvestr import Harvestr
 
+
 @click.command(context_settings={"auto_envvar_prefix": "HARVESTR"})
 @click.option('--target', '-t', type=click.Path(exists=False, file_okay=False, dir_okay=True, writable=True, readable=True, resolve_path=True, allow_dash=False), required=True)
 @click.option('--recycle', '-r', type=click.Path(exists=False, file_okay=False, dir_okay=True, writable=True, readable=True, resolve_path=True, allow_dash=False))

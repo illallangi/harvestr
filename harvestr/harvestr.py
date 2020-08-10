@@ -2,6 +2,7 @@ from pathlib import Path
 import click, os, json
 from more_itertools import one
 
+
 class Harvestr:
     def __init__(self, target, recycle, source, dry_run=False, verbose=False):
         self.target_path = os.path.abspath(target)
@@ -80,11 +81,14 @@ def find_mount_point(path):
         path = os.path.dirname(path)
     return path
 
+
 class PathsNotDirectoryException(Exception):
     pass
 
+
 class MountPointException(Exception):
     pass
+
 
 class OverloadedPathException(Exception):
     pass
