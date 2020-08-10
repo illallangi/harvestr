@@ -1,5 +1,9 @@
+import json
+import os
 from pathlib import Path
-import click, os, json
+
+import click
+
 from more_itertools import one
 
 

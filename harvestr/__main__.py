@@ -1,7 +1,10 @@
-import schedule
 import time
-import click
 from os import makedirs
+
+import click
+
+import schedule
+
 from .harvestr import Harvestr
 
 
