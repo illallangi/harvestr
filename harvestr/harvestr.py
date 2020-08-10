@@ -3,7 +3,7 @@ import click, os, json
 from more_itertools import one
 
 class Harvestr:
-    def __init__(self, target, recycle, source, dry_run = False, verbose = False):
+    def __init__(self, target, recycle, source, dry_run=False, verbose=False):
         self.target_path = os.path.abspath(target)
         self.recycle_path = os.path.abspath(recycle) if recycle else None
         self.source_paths = [os.path.abspath(source) for source in source]

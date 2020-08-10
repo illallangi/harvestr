@@ -13,7 +13,7 @@ from .harvestr import Harvestr
 def main(target, dry_run, verbose, recycle=None, source=None):
     makedirs(target, exist_ok=True)
     makedirs(recycle, exist_ok=True)
-    h = Harvestr(target, recycle, source, dry_run = dry_run, verbose = verbose)
+    h = Harvestr(target, recycle, source, dry_run=dry_run, verbose=verbose)
     h.main()
     schedule.every(1).minute.do(h.main)
     next_run = None
