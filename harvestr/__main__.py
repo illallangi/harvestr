@@ -24,5 +24,6 @@ def main(target, dry_run, verbose, recycle=None, source=None):
         time.sleep(1)
         schedule.run_pending()
 
+
 if __name__ == "__main__":
     main()
