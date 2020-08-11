@@ -74,10 +74,12 @@ class Harvestr:
     def get_inodes(self, *roots):
         result = []
         for root in roots:
-            for file in [f for f in Path(root).rglob('*') if f.is_file()]:
-                if [r for r in result if r["path"] == str(file.relative_to(root))]:
-                    raise OverloadedPathException(f'"{file}" and "{one([r for r in result if r["path"] == str(file.relative_to(root))])["src"]}" overload the path "{str(file.relative_to(root))}"')
-                result.append({'path': str(file.relative_to(root)), 'inode': os.stat(file).st_ino, 'src': str(file)})
+            files = [f for f in Path(root).rglob('*') if f.is_file()]
+            for file in files:
+                relative = str(file.relative_to(root))
+                if [r for r in result if r["path"] == relative]:
+                    raise OverloadedPathException(f'"{file}" and "{one([r for r in result if r["path"] == relative])["src"]}" overload the path "{relative}"')
+                result.append({'path': relative, 'inode': os.stat(file).st_ino, 'src': str(file)})
         return result
 
 
