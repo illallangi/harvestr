@@ -2,18 +2,17 @@ import json
 import os
 from pathlib import Path
 
-import click
+from loguru import logger
 
 from more_itertools import one
 
 
 class Harvestr:
-    def __init__(self, target, recycle, source, dry_run=False, verbose=False):
+    def __init__(self, target, recycle, source, dry_run=False):
         self.target_path = os.path.abspath(target)
         self.recycle_path = os.path.abspath(recycle) if recycle else None
         self.source_paths = [os.path.abspath(source) for source in source]
         self.dry_run = dry_run
-        self.verbose = verbose
 
         # Check if target, recycle and source[] all exist as directories
         if [p for p in (self.source_paths + [self.target_path, self.recycle_path]) if p and not os.path.isdir(p)]:
@@ -28,8 +27,7 @@ class Harvestr:
         self.sources = self.get_source()
         self.targets = self.get_target()
 
-        if self.verbose:
-            click.echo(json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2))
+        logger.trace(json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2))
 
         for item in self.sources:
             if [t for t in self.targets if t["path"] == item["path"]] and one([t for t in self.targets if t["path"] == item["path"]])["inode"] != item["inode"]:
@@ -49,18 +47,18 @@ class Harvestr:
                     self.delete(os.path.join(self.target_path, item["path"]))
 
     def delete(self, path):
-        click.echo(f'Deleting {path}')
+        logger.success(f'Deleting {path}')
         if not self.dry_run:
             os.remove(path)
 
     def move(self, src_path, dest_path):
-        click.echo(f'Moving {src_path} to {dest_path}')
+        logger.success(f'Moving {src_path} to {dest_path}')
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.rename(src_path, dest_path)
 
     def link(self, src_path, dest_path):
-        click.echo(f'Linking {src_path} to {dest_path}')
+        logger.success(f'Linking {src_path} to {dest_path}')
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.link(src_path, dest_path)

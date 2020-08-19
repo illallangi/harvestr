@@ -24,6 +24,7 @@ setuptools.setup(
     },
     install_requires=[
         'Click',
+        'loguru',
         'more_itertools'
     ]
 )
