@@ -9,21 +9,55 @@ from loguru import logger
 from .harvestr import Harvestr
 
 
-@command(context_settings={"auto_envvar_prefix": "HARVESTR"})
-@option('--target', '-t', type=PATH(exists=False, file_okay=False, dir_okay=True, writable=True, readable=True, resolve_path=True, allow_dash=False), required=True)
-@option('--recycle', '-r', type=PATH(exists=False, file_okay=False, dir_okay=True, writable=True, readable=True, resolve_path=True, allow_dash=False), required=True)
-@option('--source', '-s', type=PATH(exists=True, file_okay=False, dir_okay=True, writable=False, readable=True, resolve_path=True, allow_dash=False), required=True, multiple=True)
-@option('--dry-run', '-d', is_flag=True)
+@command()
+@option('--source',
+        '-s',
+        type=PATH(exists=True,
+                  file_okay=False,
+                  dir_okay=True,
+                  writable=False,
+                  readable=True,
+                  resolve_path=True,
+                  allow_dash=False),
+        envvar='HARVESTR_SOURCE',
+        required=True,
+        multiple=True)
+@option('--target',
+        '-t',
+        type=PATH(exists=False,
+                  file_okay=False,
+                  dir_okay=True,
+                  writable=True,
+                  readable=True,
+                  resolve_path=True,
+                  allow_dash=False),
+        envvar='HARVESTR_TARGET',
+        required=True)
+@option('--recycle',
+        '-r',
+        type=PATH(exists=False,
+                  file_okay=False,
+                  dir_okay=True,
+                  writable=True,
+                  readable=True,
+                  resolve_path=True,
+                  allow_dash=False),
+        envvar='HARVESTR_RECYCLE',
+        required=True)
+@option('--dry-run',
+        '-d',
+        envvar='HARVESTR_DRY_RUN',
+        is_flag=True)
+@option('--sleep-time',
+        type=INT,
+        envvar='HARVESTR_SLEEP_TIME',
+        default=5)
 @option('--log-level',
         type=CHOICE(['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'SUCCESS', 'TRACE'],
                     case_sensitive=False),
         envvar='HARVESTR_LOG_LEVEL',
         default='DEBUG')
-@option('--sleep-time',
-        type=INT,
-        envvar='HARVESTR_SLEEP_TIME',
-        default=5)
-def main(target, dry_run, recycle, source, sleep_time, log_level):
+def main(source, target, recycle, dry_run, sleep_time, log_level):
     logger.remove()
     logger.add(stderr, level=log_level)
 
