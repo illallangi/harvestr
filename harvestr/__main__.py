@@ -66,7 +66,7 @@ from .harvestr import Harvestr
 @option('--slack-username',
         type=STRING,
         envvar='SLACK_USERNAME',
-        default='Deluge Distributr')
+        default='Harvestr')
 @option('--slack-format',
         type=STRING,
         envvar='SLACK_FORMAT',
