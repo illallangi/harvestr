@@ -84,7 +84,7 @@ def main(source, target, recycle, dry_run, sleep_time, log_level, slack_webhook,
         slack = NotificationHandler("slack", defaults=params)
         logger.add(slack, format=slack_format, level="SUCCESS")
 
-    logger.success(f'{basename(argv[0])} Started')
+    logger.success('{} Started with {} source(s)', basename(argv[0]), len(source))
     logger.info('  --source "{}"', ':'.join(source))
     logger.info('  --target "{}"', target)
     logger.info('  --recycle "{}"', recycle)
