@@ -24,7 +24,6 @@ setuptools.setup(
     },
     install_requires=[
         'Click',
-        'more_itertools',
-        'schedule',
+        'more_itertools'
     ]
 )
