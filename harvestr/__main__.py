@@ -1,7 +1,8 @@
+from atexit import register as atexit_register
 from os import makedirs
 from os.path import basename
 from sys import argv, stderr
-from time import sleep
+from time import sleep, time
 
 from click import Choice as CHOICE, INT, Path as PATH, STRING, command, option
 
@@ -10,6 +11,35 @@ from loguru import logger
 from notifiers.logging import NotificationHandler
 
 from .harvestr import Harvestr
+
+start_time = time()
+
+
+def duration_human(seconds):
+    seconds = int(round(seconds))
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    years, days = divmod(days, 365.242199)
+
+    minutes = int(minutes)
+    hours = int(hours)
+    days = int(days)
+    years = int(years)
+
+    duration = []
+    if years > 0:
+        duration.append('%d year' % years + 's' * (years != 1))
+    else:
+        if days > 0:
+            duration.append('%d day' % days + 's' * (days != 1))
+        if hours > 0:
+            duration.append('%d hour' % hours + 's' * (hours != 1))
+        if minutes > 0:
+            duration.append('%d minute' % minutes + 's' * (minutes != 1))
+        if seconds > 0:
+            duration.append('%d second' % seconds + 's' * (seconds != 1))
+    return ' '.join(duration)
 
 
 @command()
@@ -96,14 +126,22 @@ def main(source, target, recycle, dry_run, sleep_time, log_level, slack_webhook,
     logger.info('  --slack-username "{}"', slack_username)
     logger.info('  --slack-format "{}"', slack_format)
 
-    makedirs(target, exist_ok=True)
-    makedirs(recycle, exist_ok=True)
-    h = Harvestr(target, recycle, source, dry_run=dry_run)
-    while True:
-        logger.debug(f'Sleeping {sleep_time} seconds')
-        sleep(sleep_time)
-        h.main()
+    try:
+        makedirs(target, exist_ok=True)
+        makedirs(recycle, exist_ok=True)
+        h = Harvestr(target, recycle, source, dry_run=dry_run)
+        while True:
+            logger.debug(f'Sleeping {sleep_time} seconds')
+            sleep(sleep_time)
+            h.main()
+    finally:
+        lwt()
+
+
+def lwt():
+    logger.success('{} Exiting after {}', basename(argv[0]), duration_human(time() - start_time))
 
 
 if __name__ == "__main__":
+    atexit_register(lwt)
     main()
