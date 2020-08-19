@@ -1,5 +1,6 @@
 from os import makedirs
-from sys import stderr
+from os.path import basename
+from sys import argv, stderr
 from time import sleep
 
 from click import Choice as CHOICE, INT, Path as PATH, STRING, command, option
@@ -82,6 +83,18 @@ def main(source, target, recycle, dry_run, sleep_time, log_level, slack_webhook,
         }
         slack = NotificationHandler("slack", defaults=params)
         logger.add(slack, format=slack_format, level="SUCCESS")
+
+    logger.success(f'{basename(argv[0])} Started')
+    logger.info('  --source "{}"', ':'.join(source))
+    logger.info('  --target "{}"', target)
+    logger.info('  --recycle "{}"', recycle)
+    if dry_run:
+        logger.info('  --dry-run')
+    logger.info('  --sleep-time {}', sleep_time)
+    logger.info('  --log-level "{}"', log_level)
+    logger.info('  --slack-webhook "{}"', slack_webhook)
+    logger.info('  --slack-username "{}"', slack_username)
+    logger.info('  --slack-format "{}"', slack_format)
 
     makedirs(target, exist_ok=True)
     makedirs(recycle, exist_ok=True)
