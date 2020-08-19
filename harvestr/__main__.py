@@ -2,9 +2,11 @@ from os import makedirs
 from sys import stderr
 from time import sleep
 
-from click import Choice as CHOICE, INT, Path as PATH, command, option
+from click import Choice as CHOICE, INT, Path as PATH, STRING, command, option
 
 from loguru import logger
+
+from notifiers.logging import NotificationHandler
 
 from .harvestr import Harvestr
 
@@ -57,9 +59,29 @@ from .harvestr import Harvestr
                     case_sensitive=False),
         envvar='HARVESTR_LOG_LEVEL',
         default='DEBUG')
-def main(source, target, recycle, dry_run, sleep_time, log_level):
+@option('--slack-webhook',
+        type=STRING,
+        envvar='SLACK_WEBHOOK',
+        default=None)
+@option('--slack-username',
+        type=STRING,
+        envvar='SLACK_USERNAME',
+        default='Deluge Distributr')
+@option('--slack-format',
+        type=STRING,
+        envvar='SLACK_FORMAT',
+        default='{message}')
+def main(source, target, recycle, dry_run, sleep_time, log_level, slack_webhook, slack_username, slack_format):
     logger.remove()
     logger.add(stderr, level=log_level)
+
+    if slack_webhook:
+        params = {
+            "username": slack_username,
+            "webhook_url": slack_webhook
+        }
+        slack = NotificationHandler("slack", defaults=params)
+        logger.add(slack, format=slack_format, level="SUCCESS")
 
     makedirs(target, exist_ok=True)
     makedirs(recycle, exist_ok=True)

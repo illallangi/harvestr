@@ -25,6 +25,7 @@ setuptools.setup(
     install_requires=[
         'Click',
         'loguru',
-        'more_itertools'
+        'more_itertools',
+        'notifiers'
     ]
 )
