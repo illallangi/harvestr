@@ -72,6 +72,7 @@ class Harvestr:
     def get_inodes(self, *roots):
         result = []
         for root in roots:
+            logger.debug('Getting files in {}', root)
             files = [f for f in Path(root).rglob('*') if f.is_file()]
             for file in files:
                 relative = str(file.relative_to(root))
