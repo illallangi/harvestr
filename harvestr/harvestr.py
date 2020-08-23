@@ -70,7 +70,7 @@ class Harvestr:
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.link(src_path, dest_path)
-        logger.success('Linked {basename()}', dest_path)
+        logger.success('Linked {}', basename(dest_path))
 
     def get_source(self):
         return self.get_inodes(*self.source_paths)
