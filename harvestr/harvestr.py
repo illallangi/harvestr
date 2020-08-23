@@ -48,29 +48,29 @@ class Harvestr:
                     self.delete(os.path.join(self.target_path, item["path"]))
 
     def delete(self, path):
-        logger.info(f'Deleting:'')
-        logger.info(f'  {path}')
+        logger.info('Deleting:')
+        logger.info('  {}', path)
         if not self.dry_run:
             os.remove(path)
-        logger.success(f'Deleted {basename(path)}')
+        logger.success('Deleted {}', basename(path))
 
     def move(self, src_path, dest_path):
-        logger.info(f'Moving:')
-        logger.info(f'  Source {src_path}')
-        logger.info(f'  Destination {dest_path}')
+        logger.info('Moving:')
+        logger.info('  Source {}', src_path)
+        logger.info('  Destination {}', dest_path)
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.rename(src_path, dest_path)
-        logger.success(f'Moved {basename(src_path)}')
+        logger.success('Moved {}', basename(dest_path))
 
     def link(self, src_path, dest_path):
-        logger.info(f'Linking:')
-        logger.info(f'  Source {src_path}')
-        logger.info(f'  Destination {dest_path}')
+        logger.info('Linking:')
+        logger.info('  Source {}', src_path)
+        logger.info('  Destination {}', dest_path)
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.link(src_path, dest_path)
-        logger.success(f'Linked {basename(dest_path)}')
+        logger.success('Linked {basename()}', dest_path)
 
     def get_source(self):
         return self.get_inodes(*self.source_paths)
