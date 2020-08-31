@@ -11,6 +11,12 @@ jobs:
       - name: Checkout Repository
         id: checkout
         uses: actions/checkout@v2
+      - name: Setup Python
+        id: python-setup
+        uses: actions/setup-python@v1
+      - name: Lint Python
+        id: python-lint
+        uses: whynothugo/python-linting@master
       - name: Prepare Environment
         id: prepare
         env:
