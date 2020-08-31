@@ -1,5 +1,6 @@
 import json
 import os
+from fnmatch import fnmatch
 from os.path import basename, exists
 from pathlib import Path
 
@@ -9,10 +10,11 @@ from more_itertools import one
 
 
 class Harvestr:
-    def __init__(self, target, recycle, source, dry_run=False):
+    def __init__(self, target, recycle, source, exclude=None, dry_run=False):
         self.target_path = os.path.abspath(target)
         self.recycle_path = os.path.abspath(recycle) if recycle else None
         self.source_paths = [os.path.abspath(source) for source in source]
+        self.exclude = exclude if exclude else []
         self.dry_run = dry_run
 
         # Check if target, recycle and source[] all exist as directories
@@ -93,6 +95,13 @@ class Harvestr:
             logger.debug('Getting files in {}', root)
             files = [f for f in Path(root).rglob('*') if f.is_file()]
             for file in files:
+                exclude = False
+                for e in self.exclude:
+                    if fnmatch(str(file), e):
+                        exclude = True
+                if exclude:
+                    logger.debug('{} excluded', basename(str(file)))
+                    continue
                 relative = str(file.relative_to(root))
                 if [r for r in result if r["path"] == relative]:
                     raise OverloadedPathException(f'"{file}" and "{one([r for r in result if r["path"] == relative])["src"]}" overload the path "{relative}"')
