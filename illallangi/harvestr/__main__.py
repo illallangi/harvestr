@@ -102,6 +102,7 @@ def duration_human(seconds):
         type=STRING,
         envvar='SLACK_FORMAT',
         default='{message}')
+@logger.catch
 def main(source, target, recycle, dry_run, sleep_time, log_level, slack_webhook, slack_username, slack_format):
     logger.remove()
     logger.add(stderr, level=log_level)
