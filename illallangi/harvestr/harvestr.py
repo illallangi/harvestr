@@ -50,6 +50,9 @@ class Harvestr:
     def delete(self, path):
         logger.info('Deleting:')
         logger.info('  {}', path)
+        if not file.exists(path):
+            logger.warning('{} disappeared during run', basename(path))
+            return
         if not self.dry_run:
             os.remove(path)
         logger.success('Deleted {}', basename(path))
@@ -58,6 +61,9 @@ class Harvestr:
         logger.info('Moving:')
         logger.info('  Source {}', src_path)
         logger.info('  Destination {}', dest_path)
+        if not file.exists(src_path):
+            logger.warning('{} disappeared during run', basename(path))
+            return
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.rename(src_path, dest_path)
@@ -67,6 +73,9 @@ class Harvestr:
         logger.info('Linking:')
         logger.info('  Source {}', src_path)
         logger.info('  Destination {}', dest_path)
+        if not file.exists(src_path):
+            logger.warning('{} disappeared during run', basename(path))
+            return
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.link(src_path, dest_path)
