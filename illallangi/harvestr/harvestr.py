@@ -1,6 +1,6 @@
 import json
 import os
-from os.path import basename
+from os.path import basename, exists
 from pathlib import Path
 
 from loguru import logger
@@ -50,7 +50,7 @@ class Harvestr:
     def delete(self, path):
         logger.info('Deleting:')
         logger.info('  {}', path)
-        if not file.exists(path):
+        if not exists(path):
             logger.warning('{} disappeared during run', basename(path))
             return
         if not self.dry_run:
@@ -61,8 +61,8 @@ class Harvestr:
         logger.info('Moving:')
         logger.info('  Source {}', src_path)
         logger.info('  Destination {}', dest_path)
-        if not file.exists(src_path):
-            logger.warning('{} disappeared during run', basename(path))
+        if not exists(src_path):
+            logger.warning('{} disappeared during run', basename(src_path))
             return
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
@@ -73,8 +73,8 @@ class Harvestr:
         logger.info('Linking:')
         logger.info('  Source {}', src_path)
         logger.info('  Destination {}', dest_path)
-        if not file.exists(src_path):
-            logger.warning('{} disappeared during run', basename(path))
+        if not exists(src_path):
+            logger.warning('{} disappeared during run', basename(src_path))
             return
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
