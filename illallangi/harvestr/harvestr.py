@@ -96,6 +96,9 @@ class Harvestr:
                 relative = str(file.relative_to(root))
                 if [r for r in result if r["path"] == relative]:
                     raise OverloadedPathException(f'"{file}" and "{one([r for r in result if r["path"] == relative])["src"]}" overload the path "{relative}"')
+                if not exists(file):
+                    logger.warning('{} disappeared during run', basename(file))
+                    continue
                 result.append({'path': relative, 'inode': os.stat(file).st_ino, 'src': str(file)})
         return result
 
