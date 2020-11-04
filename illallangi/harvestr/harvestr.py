@@ -73,11 +73,11 @@ class Harvestr:
         if sum([moved_ok, moved_err, deleted_ok, deleted_err, linked_ok, linked_err]) > 0:
             logger.success("Run completed:")
             if sum([moved_ok, moved_err]) > 0:
-                logger.success("  Moved {moved_ok} successfully, {moved_err} failed.")
+                logger.success(f"  Moved {moved_ok} successfully, {moved_err} failed.")
             if sum([deleted_ok, deleted_err]) > 0:
-                logger.success("  Deleted {deleted_ok} successfully, {deleted_err} failed.")
+                logger.success(f"  Deleted {deleted_ok} successfully, {deleted_err} failed.")
             if sum([linked_ok, linked_err]) > 0:
-                logger.success("  Linked {linked_ok} successfully, {linked_err} failed.")
+                logger.success(f"  Linked {linked_ok} successfully, {linked_err} failed.")
 
     def delete(self, path):
         logger.debug('Deleting:')
