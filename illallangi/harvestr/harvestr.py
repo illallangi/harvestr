@@ -35,7 +35,6 @@ class Harvestr:
         deleted_err = 0
         linked_ok = 0
         linked_err = 0
-        
 
         logger.trace(json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2))
 
@@ -70,7 +69,7 @@ class Harvestr:
                         deleted_ok += 1
                     else:
                         deleted_err += 1
-        
+
         if sum([moved_ok, moved_err, deleted_ok, deleted_err, linked_ok, linked_err]) > 0:
             logger.success("Run completed:")
             if sum([moved_ok, moved_err]) > 0:
