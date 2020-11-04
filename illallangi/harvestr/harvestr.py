@@ -97,6 +97,9 @@ class Harvestr:
         if not exists(src_path):
             logger.warning('{} disappeared during run', basename(src_path))
             return False
+        if exists(dest_path):
+            logger.warning('{} already exists', dest_path)
+            return False
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.rename(src_path, dest_path)
