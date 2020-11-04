@@ -29,59 +29,93 @@ class Harvestr:
     def main(self):
         self.sources = self.get_source()
         self.targets = self.get_target()
+        moved_ok = 0
+        moved_err = 0
+        deleted_ok = 0
+        deleted_err = 0
+        linked_ok = 0
+        linked_err = 0
+        
 
         logger.trace(json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2))
 
         for item in self.sources:
             if [t for t in self.targets if t["path"] == item["path"]] and one([t for t in self.targets if t["path"] == item["path"]])["inode"] != item["inode"]:
                 if self.recycle_path:
-                    self.move(os.path.join(self.target_path, item["path"]), os.path.join(self.recycle_path, item["path"]))
+                    if self.move(os.path.join(self.target_path, item["path"]), os.path.join(self.recycle_path, item["path"])):
+                        moved_ok += 1
+                    else:
+                        moved_err += 1
                 else:
-                    self.delete(os.path.join(self.target_path, item["path"]))
+                    if self.delete(os.path.join(self.target_path, item["path"])):
+                        deleted_ok += 1
+                    else:
+                        deleted_err += 1
 
             if not [t for t in self.targets if t["path"] == item["path"]]:
-                self.link(item["src"], os.path.join(self.target_path, item["path"]))
+                if self.link(item["src"], os.path.join(self.target_path, item["path"])):
+                    linked_ok += 1
+                else:
+                    linked_err += 1
 
         for item in self.targets:
             if not [s for s in self.sources if s["path"] == item["path"]]:
                 if self.recycle_path:
-                    self.move(os.path.join(self.target_path, item["path"]), os.path.join(self.recycle_path, item["path"]))
+                    if self.move(os.path.join(self.target_path, item["path"]), os.path.join(self.recycle_path, item["path"])):
+                        moved_ok += 1
+                    else:
+                        moved_err += 1
                 else:
-                    self.delete(os.path.join(self.target_path, item["path"]))
+                    if self.delete(os.path.join(self.target_path, item["path"])):
+                        deleted_ok += 1
+                    else:
+                        deleted_err += 1
+        
+        if sum([moved_ok, moved_err, deleted_ok, deleted_err, linked_ok, linked_err]) > 0:
+            logger.success("Run completed:")
+            if sum([moved_ok, moved_err]) > 0:
+                logger.success("  Moved {moved_ok} successfully, {moved_err} failed.")
+            if sum([deleted_ok, deleted_err]) > 0:
+                logger.success("  Deleted {deleted_ok} successfully, {deleted_err} failed.")
+            if sum([linked_ok, linked_err]) > 0:
+                logger.success("  Linked {linked_ok} successfully, {linked_err} failed.")
 
     def delete(self, path):
-        logger.info('Deleting:')
-        logger.info('  {}', path)
+        logger.debug('Deleting:')
+        logger.debug('  {}', path)
         if not exists(path):
             logger.warning('{} disappeared during run', basename(path))
-            return
+            return False
         if not self.dry_run:
             os.remove(path)
-        logger.success('Deleted {}', basename(path))
+        logger.info('Deleted {}', basename(path))
+        return True
 
     def move(self, src_path, dest_path):
-        logger.info('Moving:')
-        logger.info('  Source {}', src_path)
-        logger.info('  Destination {}', dest_path)
+        logger.debug('Moving:')
+        logger.debug('  Source {}', src_path)
+        logger.debug('  Destination {}', dest_path)
         if not exists(src_path):
             logger.warning('{} disappeared during run', basename(src_path))
-            return
+            return False
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.rename(src_path, dest_path)
-        logger.success('Moved {}', basename(dest_path))
+        logger.info('Moved {}', basename(dest_path))
+        return True
 
     def link(self, src_path, dest_path):
-        logger.info('Linking:')
-        logger.info('  Source {}', src_path)
-        logger.info('  Destination {}', dest_path)
+        logger.debug('Linking:')
+        logger.debug('  Source {}', src_path)
+        logger.debug('  Destination {}', dest_path)
         if not exists(src_path):
             logger.warning('{} disappeared during run', basename(src_path))
-            return
+            return False
         if not self.dry_run:
             os.makedirs(os.path.dirname(dest_path), exist_ok=True)
             os.link(src_path, dest_path)
-        logger.success('Linked {}', basename(dest_path))
+        logger.info('Linked {}', basename(dest_path))
+        return True
 
     def get_source(self):
         return self.get_inodes(*self.source_paths)
