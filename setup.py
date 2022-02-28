@@ -20,7 +20,7 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     entry_points={
-        'console_scripts': ['harvestr=illallangi.harvestr:__main__.main'],
+        'console_scripts': ['harvestr=harvestr:__main__.main'],
     },
     install_requires=[
         'Click',
