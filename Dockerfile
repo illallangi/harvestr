@@ -14,7 +14,7 @@ RUN \
 
 WORKDIR /usr/src/app
 
-ADD . /usr/src/app/
+COPY . /usr/src/app/
 
 RUN pip3 install .
 
