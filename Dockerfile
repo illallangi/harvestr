@@ -8,7 +8,7 @@ RUN \
   apt-get update \
   && \
   apt-get install -y \
-    gosu \
+    gosu=1.12-1+b6 \
   && \
   apt-get clean
 
