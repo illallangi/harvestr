@@ -16,7 +16,7 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app/
 
-RUN pip3 install .
+RUN pip3 --no-cache-dir install .
 
 # set entrypoint
 ENTRYPOINT ["./custom-entrypoint"]
