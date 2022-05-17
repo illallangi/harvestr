@@ -6,7 +6,7 @@ ENV PYTHONUNBUFFERED=1 \
 # install gosu
 RUN apt-get update \
     && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
       gosu=1.12-1+b6 \
     && \
     rm -rf /var/lib/apt/lists/*
