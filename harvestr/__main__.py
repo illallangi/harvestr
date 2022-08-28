@@ -133,6 +133,8 @@ def main(source, target, recycle, exclude, dry_run, sleep_time, log_level, slack
     logger.info('  --slack-format "{}"', slack_format)
 
     try:
+        for s in source:
+            makedirs(s, exist_ok = True)
         makedirs(target, exist_ok=True)
         makedirs(recycle, exist_ok=True)
         h = Harvestr(target, recycle, source, exclude=[exclude] if exclude else None, dry_run=dry_run)
