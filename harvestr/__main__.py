@@ -82,6 +82,11 @@ def duration_human(seconds):
         type=STRING,
         envvar='HARVESTR_EXCLUDE',
         required=False)
+@option('--include',
+        '-i',
+        type=STRING,
+        envvar='HARVESTR_INCLUDE',
+        required=False)
 @option('--dry-run',
         '-d',
         envvar='HARVESTR_DRY_RUN',
@@ -108,7 +113,7 @@ def duration_human(seconds):
         envvar='SLACK_FORMAT',
         default='{message}')
 @logger.catch
-def main(source, target, recycle, exclude, dry_run, sleep_time, log_level, slack_webhook, slack_username, slack_format):
+def main(source, target, recycle, exclude, include, dry_run, sleep_time, log_level, slack_webhook, slack_username, slack_format):
     logger.remove()
     logger.add(stderr, level=log_level)
 
@@ -124,6 +129,8 @@ def main(source, target, recycle, exclude, dry_run, sleep_time, log_level, slack
     logger.info('  --source "{}"', ':'.join(source))
     logger.info('  --target "{}"', target)
     logger.info('  --recycle "{}"', recycle)
+    logger.info('  --exclude "{}"', exclude)
+    logger.info('  --include "{}"', include)
     if dry_run:
         logger.info('  --dry-run')
     logger.info('  --sleep-time {}', sleep_time)
@@ -135,7 +142,13 @@ def main(source, target, recycle, exclude, dry_run, sleep_time, log_level, slack
     try:
         makedirs(target, exist_ok=True)
         makedirs(recycle, exist_ok=True)
-        h = Harvestr(target, recycle, source, exclude=[exclude] if exclude else None, dry_run=dry_run)
+        h = Harvestr(
+            target,
+            recycle,
+            source,
+            exclude=[exclude] if exclude else None,
+            include=[include] if include else ['*'],
+            dry_run=dry_run)
         while True:
             logger.debug(f'Sleeping {sleep_time} seconds')
             sleep(sleep_time)
