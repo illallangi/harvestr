@@ -10,11 +10,12 @@ from more_itertools import one
 
 
 class Harvestr:
-    def __init__(self, target, recycle, source, exclude=None, dry_run=False):
+    def __init__(self, target, recycle, source, exclude=None, include=['*'], dry_run=False):
         self.target_path = os.path.abspath(target)
         self.recycle_path = os.path.abspath(recycle) if recycle else None
         self.source_paths = [os.path.abspath(source) for source in source]
         self.exclude = exclude if exclude else []
+        self.include = include if include else ['*']
         self.dry_run = dry_run
 
         # Check if target, recycle and source[] all exist as directories
@@ -137,6 +138,13 @@ class Harvestr:
                         exclude = True
                 if exclude:
                     logger.debug('{} excluded', basename(str(file)))
+                    continue
+                include = False
+                for e in self.include:
+                    if fnmatch(str(file), e):
+                        include = True
+                if not include:
+                    logger.debug('{} not included', basename(str(file)))
                     continue
                 relative = str(file.relative_to(root))
                 if [r for r in result if r["path"] == relative]:
