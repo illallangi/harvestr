@@ -45,7 +45,7 @@ def duration_human(seconds):
 @command()
 @option('--source',
         '-s',
-        type=PATH(exists=True,
+        type=PATH(exists=False,
                   file_okay=False,
                   dir_okay=True,
                   writable=False,
