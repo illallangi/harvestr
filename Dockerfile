@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apt-get update \
     && \
     apt-get install -y --no-install-recommends \
-      gosu=1.14-1+b6 \
+      gosu=1.14-1+b10 \
     && \
     rm -rf /var/lib/apt/lists/*
 
