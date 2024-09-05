@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.12.1
+FROM docker.io/library/python:3.12.5
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=UTF-8
@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apt-get update \
     && \
     apt-get install -y --no-install-recommends \
-      gosu=1.14-1+b6 \
+      gosu=1.14-1+b10 \
     && \
     rm -rf /var/lib/apt/lists/*
 
