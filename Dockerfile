@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.12.6
+FROM docker.io/library/python:3.12.7
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=UTF-8
